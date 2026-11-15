@@ -31,7 +31,7 @@
     "@astrojs/check": "^0.9.12",
     "@biomejs/biome": "2.6.7",
     "@types/sanitize-html": "^2.16.2",
-    "@ws42/guardrails": "file:vendor/ws42-guardrails-0.4.1.tgz",
+    "@ws42/guardrails": "file:vendor/ws42-guardrails-0.4.2.tgz",
     "decap-server": "^3.11.6",
     "typescript": "~6.0.3",
     "wrangler": "^4.162.0"
