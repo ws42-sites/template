@@ -12,7 +12,8 @@
     "lint": "biome check .",
     "fix": "biome check --write .",
     "check": "astro check",
-    "cms": "npx decap-server"
+    "cms": "npx decap-server",
+    "check:arch": "node scripts/check-architecture.mjs"
   },
   "dependencies": {
     "@sentry/astro": "^11.12.0",
