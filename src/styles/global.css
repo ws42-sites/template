@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", ui-sans-serif, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+
+  --color-brand: #2f4b8f;
+  --color-brand-ink: #f7f8fb;
+  --color-accent: #d9822b;
+  --color-surface: #f6f7f9;
+  --color-surface-alt: #eceff4;
+  --color-ink: #1d2433;
+  --color-muted: #5b6475;
+  --color-line: #dfe3ea;
+  --color-danger: #9b1c1c;
+
+  --radius-card: 0.75rem;
+  --radius-button: 9999px;
+  --container-site: 72rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-surface font-sans text-ink antialiased;
+}
+
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-brand;
+}

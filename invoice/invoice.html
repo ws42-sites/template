@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Invoice — WS42</title>
+    <style>
+      :root {
+        --ink: #1d2433;
+        --muted: #5b6475;
+        --line: #d8dce4;
+        --brand: #2f4b8f;
+        --accent: #d9822b;
+        --paper: #fbfaf6;
+        --white: #ffffff;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: #e8eaef;
+        color: var(--ink);
+        font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+        line-height: 1.45;
+      }
+      .sheet {
+        width: 8.5in;
+        min-height: 11in;
+        margin: 24px auto;
+        background: var(--paper);
+        padding: 0.7in 0.75in 0.65in;
+        box-shadow: 0 12px 40px rgba(29, 36, 51, 0.12);
+        position: relative;
+      }
+      .toolbar {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      button {
+        appearance: none;
+        border: 0;
+        background: var(--brand);
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      button:hover { filter: brightness(1.08); }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 24px;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 22px;
+      }
+      .mark {
+        font-family: Palatino, "Palatino Linotype", "Iowan Old Style", Georgia, serif;
+        font-size: 42px;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--brand);
+      }
+      .mark span { color: var(--accent); }
+      .from {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 10px;
+      }
+      .meta { text-align: right; }
+      .meta h1 {
+        margin: 0;
+        font-family: Palatino, "Palatino Linotype", "Iowan Old Style", Georgia, serif;
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .meta dl {
+        margin: 12px 0 0;
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 4px 18px;
+        justify-content: end;
+        font-size: 14px;
+      }
+      .meta dt { color: var(--muted); }
+      .meta dd { margin: 0; font-weight: 600; }
+      .parties {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin: 32px 0 28px;
+      }
+      .label {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .party-name { font-size: 18px; font-weight: 650; }
+      .party-detail { color: var(--muted); font-size: 14px; margin-top: 2px; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+      }
+      th {
+        text-align: left;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid var(--ink);
+        padding: 0 0 8px;
+      }
+      th.num, td.num { text-align: right; }
+      td {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      .pkg { font-weight: 650; }
+      .desc { color: var(--muted); font-size: 14px; margin-top: 3px; }
+      tfoot td {
+        border-bottom: 0;
+        padding-top: 18px;
+      }
+      .total-label {
+        text-align: right;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 12px;
+        padding-right: 18px;
+      }
+      .total {
+        font-family: Palatino, "Palatino Linotype", "Iowan Old Style", Georgia, serif;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--brand);
+        text-align: right;
+        white-space: nowrap;
+      }
+      .pay {
+        margin-top: 36px;
+        padding: 18px 20px;
+        border: 1px solid var(--line);
+        background: var(--white);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+      .pay a {
+        color: var(--brand);
+        font-weight: 650;
+        text-decoration: none;
+        word-break: break-all;
+      }
+      .pay a:hover { text-decoration: underline; }
+      .notes {
+        margin-top: 28px;
+        font-size: 14px;
+        color: var(--muted);
+        max-width: 38em;
+      }
+      footer {
+        position: absolute;
+        left: 0.75in;
+        right: 0.75in;
+        bottom: 0.45in;
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+      @page { size: letter; margin: 0; }
+      @media print {
+        body { background: white; }
+        .toolbar { display: none !important; }
+        .sheet {
+          margin: 0;
+          box-shadow: none;
+          width: auto;
+          min-height: 11in;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sheet">
+      <div class="toolbar">
+        <button type="button" id="print-btn">Print invoice</button>
+      </div>
+      <header>
+        <div>
+          <div class="mark">WS<span>42</span></div>
+          <div class="from" id="from-block"></div>
+        </div>
+        <div class="meta">
+          <h1>Invoice</h1>
+          <dl>
+            <dt>Invoice</dt>
+            <dd id="number"></dd>
+            <dt>Date</dt>
+            <dd id="date"></dd>
+          </dl>
+        </div>
+      </header>
+      <div class="parties">
+        <div>
+          <div class="label">Billed to</div>
+          <div class="party-name" id="client"></div>
+          <div class="party-detail" id="client-detail"></div>
+        </div>
+        <div>
+          <div class="label">From</div>
+          <div class="party-name" id="from-name"></div>
+          <div class="party-detail" id="from-detail"></div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th class="num">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="pkg" id="package"></div>
+              <div class="desc" id="description"></div>
+            </td>
+            <td class="num" id="line-amount"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td class="total-label">Total</td>
+            <td class="total" id="total"></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="pay">
+        <div>
+          <div class="label">Payment</div>
+          <a id="payment-link" href="#"></a>
+        </div>
+      </div>
+      <p class="notes" id="notes"></p>
+      <footer>
+        <span>WS42 website factory</span>
+        <span id="foot-number"></span>
+      </footer>
+    </div>
+    <script>
+      const invoiceDefaults = {
+        number: "WS42-0001",
+        date: "2026-11-15",
+        client: "Example Business",
+        clientDetail: "Vernon, Ontario",
+        package: "Starter Site",
+        description: "Design and build of a one-page marketing site, including contact form and launch support.",
+        amount: "2500.00",
+        currency: "CAD",
+        paymentLink: "https://pay.example.com/invoice/WS42-0001",
+        from: "WS42",
+        fromDetail: "British Columbia, Canada",
+        notes: "Payment is due within 14 days. Thank you for your business."
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const aliases = {
+        client: ["client", "name"],
+        package: ["package"],
+        amount: ["amount"],
+        date: ["date"],
+        number: ["number", "invoice"],
+        paymentLink: ["pay", "payment", "paymentLink"],
+        currency: ["currency"],
+        notes: ["notes"],
+        clientDetail: ["clientDetail", "detail"],
+        description: ["description"],
+        from: ["from"],
+        fromDetail: ["fromDetail"]
+      };
+
+      const invoice = { ...invoiceDefaults };
+      for (const [key, names] of Object.entries(aliases)) {
+        for (const name of names) {
+          const value = params.get(name);
+          if (value !== null && value.trim() !== "") {
+            invoice[key] = value;
+            break;
+          }
+        }
+      }
+
+      const money = new Intl.NumberFormat("en-CA", {
+        style: "currency",
+        currency: invoice.currency || "CAD"
+      }).format(Number(String(invoice.amount).replace(/,/g, "")) || 0);
+
+      const dateLabel = (() => {
+        const parsed = new Date(`${invoice.date}T00:00:00`);
+        if (Number.isNaN(parsed.getTime())) return invoice.date;
+        return parsed.toLocaleDateString("en-CA", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        });
+      })();
+
+      document.getElementById("number").textContent = invoice.number;
+      document.getElementById("foot-number").textContent = invoice.number;
+      document.getElementById("date").textContent = dateLabel;
+      document.getElementById("client").textContent = invoice.client;
+      document.getElementById("client-detail").textContent = invoice.clientDetail;
+      document.getElementById("from-name").textContent = invoice.from;
+      document.getElementById("from-detail").textContent = invoice.fromDetail;
+      document.getElementById("from-block").innerHTML =
+        `${invoice.from}<br>${invoice.fromDetail}`;
+      document.getElementById("package").textContent = invoice.package;
+      document.getElementById("description").textContent = invoice.description;
+      document.getElementById("line-amount").textContent = money;
+      document.getElementById("total").textContent = money;
+      const pay = document.getElementById("payment-link");
+      pay.textContent = invoice.paymentLink;
+      pay.setAttribute("href", invoice.paymentLink);
+      document.getElementById("notes").textContent = invoice.notes;
+      document.title = `Invoice ${invoice.number} — WS42`;
+
+      document.getElementById("print-btn").addEventListener("click", () => window.print());
+    </script>
+  </body>
+</html>

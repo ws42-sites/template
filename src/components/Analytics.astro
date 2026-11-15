@@ -1,0 +1,12 @@
+---
+import { getAnalyticsConfig } from "../site.config";
+
+const analytics = getAnalyticsConfig();
+---
+
+{analytics.provider === "plausible" && (
+  <script is:inline defer data-domain={analytics.domain} src="https://plausible.io/js/script.js" />
+)}
+{analytics.provider === "fathom" && (
+  <script is:inline defer data-site={analytics.siteId} src="https://cdn.usefathom.com/script.js" />
+)}

@@ -1,0 +1,27 @@
+backend:
+  name: github
+  repo: ws42-sites/CLIENT_REPO
+  branch: main
+  base_url: https://YOUR_OAUTH_PROXY_URL
+local_backend: true
+media_folder: public/images/uploads
+public_folder: /images/uploads
+collections:
+  - name: pages
+    label: Pages
+    folder: src/content/pages
+    create: true
+    format: yml
+    extension: yml
+    slug: "{{slug}}"
+    preview_path: "{{slug}}/"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Hero image
+        name: hero
+        widget: image
+      - label: Body
+        name: body
+        widget: markdown

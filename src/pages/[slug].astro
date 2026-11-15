@@ -1,0 +1,37 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import { renderMarkdown } from "../lib/markdown";
+import { isReservedPageSlug } from "../lib/page-slugs";
+
+export async function getStaticPaths() {
+  const pages = await getCollection("pages");
+  return pages
+    .filter((page) => !isReservedPageSlug(page.id))
+    .map((page) => ({
+      params: { slug: page.id },
+      props: { page },
+    }));
+}
+
+type Props = {
+  page: CollectionEntry<"pages">;
+};
+
+const { page } = Astro.props;
+const { title, hero, body } = page.data;
+const html = await renderMarkdown(body);
+---
+
+<Base title={title}>
+  <article class="mx-auto max-w-3xl px-6 py-16">
+    {hero ? (
+      <img class="rounded-card mb-10 aspect-[16/7] w-full object-cover" src={hero} alt={title} />
+    ) : null}
+    <h1 class="font-display text-4xl tracking-tight">{title}</h1>
+    <div
+      class="[&_a]:decoration-line [&_h2]:font-display mt-8 space-y-4 text-[17px] leading-7 [&_a]:underline [&_a]:underline-offset-4 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:tracking-tight [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
+      set:html={html}
+    />
+  </article>
+</Base>

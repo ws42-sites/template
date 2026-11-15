@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import Analytics from "../components/Analytics.astro";
+import { isReservedPageSlug } from "../lib/page-slugs";
+import { siteConfig } from "../site.config";
+import "../styles/global.css";
+
+type Props = {
+  title: string;
+  description?: string;
+};
+
+const { title, description = siteConfig.tagline } = Astro.props;
+const pageTitle = title === siteConfig.name ? title : `${title} · ${siteConfig.name}`;
+const cmsPages = (await getCollection("pages"))
+  .filter((page) => !isReservedPageSlug(page.id))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content={description}>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>{pageTitle}</title>
+    <Analytics />
+  </head>
+  <body class="min-h-screen">
+    <a
+      class="rounded-button bg-brand text-brand-ink absolute top-0 left-4 z-50 -translate-y-full px-4 py-2 focus:translate-y-4"
+      href="#main"
+      >Skip to content</a
+    >
+    <header class="border-line border-b bg-white">
+      <div class="max-w-site mx-auto flex items-center justify-between gap-6 px-6 py-5">
+        <a class="font-display text-ink text-xl font-semibold tracking-tight" href="/"
+          >{siteConfig.name}</a
+        >
+        <nav aria-label="Primary">
+          <ul class="text-muted flex gap-6 text-sm font-medium">
+            <li><a class="hover:text-ink" href="/">Home</a></li>
+            {cmsPages.map((page) => (
+              <li>
+                <a class="hover:text-ink" href={`/${page.id}/`}>
+                  {page.data.title}
+                </a>
+              </li>
+            ))}
+            <li><a class="hover:text-ink" href="/#contact">Contact</a></li>
+            <li><a class="hover:text-ink" href="/privacy/">Privacy</a></li>
+            <li><a class="hover:text-ink" href="/terms/">Terms</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="border-line border-t">
+      <div
+        class="max-w-site text-muted mx-auto flex flex-col gap-3 px-6 py-8 text-sm sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p>© {new Date().getFullYear()} {siteConfig.name}</p>
+        <p class="flex gap-5">
+          <a class="hover:text-ink" href="/privacy/">Privacy</a>
+          <a class="hover:text-ink" href="/terms/">Terms</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

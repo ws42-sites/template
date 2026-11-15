@@ -1,0 +1,31 @@
+---
+import ContactForm from "../components/ContactForm.astro";
+import Base from "../layouts/Base.astro";
+import { siteConfig } from "../site.config";
+---
+
+<Base title={siteConfig.name} description={siteConfig.tagline}>
+  <section class="max-w-site mx-auto px-6 py-16 sm:py-24">
+    <p class="text-brand text-sm font-medium tracking-[0.16em] uppercase">WS42</p>
+    <h1 class="font-display mt-3 max-w-3xl text-4xl leading-tight tracking-tight sm:text-5xl">
+      {siteConfig.name}
+    </h1>
+    <p class="text-muted mt-5 max-w-2xl text-lg">{siteConfig.tagline}</p>
+  </section>
+  <section class="border-line border-t bg-white" id="contact">
+    <div class="max-w-site mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[1fr_1.2fr]">
+      <div>
+        <h2 class="font-display text-3xl tracking-tight">Get in touch</h2>
+        <p class="text-muted mt-3 max-w-md">
+          Send a message to {siteConfig.name}. We read every note at
+          <a
+            class="text-ink decoration-line underline underline-offset-4"
+            href={`mailto:${siteConfig.contactEmail}`}
+            >{siteConfig.contactEmail}</a
+          >.
+        </p>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</Base>

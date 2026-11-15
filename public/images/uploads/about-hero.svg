@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="About">
+  <title>About</title>
+  <rect width="1600" height="700" fill="#2f4b8f" />
+  <rect x="0" y="520" width="1600" height="180" fill="#243a70" />
+  <circle cx="1280" cy="160" r="90" fill="#d9822b" />
+  <text
+    x="80"
+    y="390"
+    font-family="Georgia, serif"
+    font-size="120"
+    font-weight="700"
+    fill="#f7f8fb"
+  >
+    About
+  </text>
+</svg>

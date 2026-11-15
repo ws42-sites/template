@@ -1,0 +1,13 @@
+title: About
+hero: /images/uploads/about-hero.svg
+body: |
+  We are a local business, and this page is a sample Decap CMS entry.
+
+  You can change the title, hero image, and this body in the admin at `/admin/`.
+  New pages are stored as YAML in `src/content/pages`, not as markdown files.
+
+  ## What to expect
+
+  - A short introduction to the business
+  - A photo or illustration in the hero field
+  - Contact details on the home page
