@@ -35,9 +35,15 @@ const cmsPages = (await getCollection("pages"))
     >
     <header class="border-line border-b bg-white">
       <div class="max-w-site mx-auto flex items-center justify-between gap-6 px-6 py-5">
-        <a class="font-display text-ink text-xl font-semibold tracking-tight" href="/"
-          >{siteConfig.name}</a
-        >
+        <a class="shrink-0" href="/">
+          <img
+            class="h-9 w-auto"
+            src="/images/ws42-logo-purple.svg"
+            alt={siteConfig.name}
+            width="1432"
+            height="360"
+          >
+        </a>
         <nav aria-label="Primary">
           <ul class="text-muted flex gap-6 text-sm font-medium">
             <li><a class="hover:text-ink" href="/">Home</a></li>
