@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "maxLines": 300,
+  "totals": {
+    "testFiles": 0,
+    "testLines": 0,
+    "productFiles": 7,
+    "productLines": 191,
+    "ratio": 0
+  },
+  "byKind": {
+    "oversize": 0
+  },
+  "counts": {},
+  "oversize": {}
+}

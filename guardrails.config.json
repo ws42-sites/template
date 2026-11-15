@@ -25,5 +25,8 @@
       "nightly": "No test suite yet (CI is lint, astro check and build); add test:full and a nightly run with the first tests.",
       "preDeploy": "Cloudflare Pages Git integration deploys on push; the PR CI (lint, check, build) is the only pre-deploy gate."
     }
+  },
+  "testSuite": {
+    "enabled": true
   }
 }
