@@ -17,6 +17,8 @@ jobs:
       - run: npm ci
       - name: Architecture check
         run: npm run check:arch
+      - name: Guardrails (docs, runbook)
+        run: npm run check:guardrails
       - name: Lint
         run: npm run lint
       - name: Type check
