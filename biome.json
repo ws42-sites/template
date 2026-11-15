@@ -56,6 +56,9 @@
           "correctness": {
             "noUnusedVariables": "off",
             "noUnusedImports": "off"
+          },
+          "a11y": {
+            "noAmbiguousAnchorText": "warn"
           }
         }
       }
@@ -66,6 +69,16 @@
         "rules": {
           "a11y": {
             "noSvgWithoutTitle": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/styles/**"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noImportantStyles": "off"
           }
         }
       }

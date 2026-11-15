@@ -70,9 +70,9 @@ const jsonLd = {
       href="#main"
       >Skip to content</a
     >
-    <header class="border-line border-b bg-white">
+    <header class="border-line border-b bg-white shadow-sm">
       <div class="max-w-site mx-auto flex items-center justify-between gap-6 px-6 py-5">
-        <a class="shrink-0" href="/">
+        <a class="shrink-0 transition hover:opacity-80" href="/">
           <img
             class="h-9 w-auto"
             src="/images/ws42-logo-purple.svg"
@@ -83,17 +83,17 @@ const jsonLd = {
         </a>
         <nav aria-label="Primary">
           <ul class="text-muted flex gap-6 text-sm font-medium">
-            <li><a class="hover:text-ink" href="/">Home</a></li>
+            <li><a class="hover:text-brand transition" href="/">Home</a></li>
             {cmsPages.map((page) => (
               <li>
-                <a class="hover:text-ink" href={`/${page.id}/`}>
+                <a class="hover:text-brand transition" href={`/${page.id}/`}>
                   {page.data.title}
                 </a>
               </li>
             ))}
-            <li><a class="hover:text-ink" href="/#contact">Contact</a></li>
-            <li><a class="hover:text-ink" href="/privacy/">Privacy</a></li>
-            <li><a class="hover:text-ink" href="/terms/">Terms</a></li>
+            <li><a class="hover:text-brand transition" href="/#contact">Contact</a></li>
+            <li><a class="hover:text-brand transition" href="/privacy/">Privacy</a></li>
+            <li><a class="hover:text-brand transition" href="/terms/">Terms</a></li>
           </ul>
         </nav>
       </div>
@@ -101,15 +101,88 @@ const jsonLd = {
     <main id="main">
       <slot />
     </main>
-    <footer class="border-line border-t">
-      <div
-        class="max-w-site text-muted mx-auto flex flex-col gap-3 px-6 py-8 text-sm sm:flex-row sm:items-center sm:justify-between"
-      >
-        <p>© {new Date().getFullYear()} {siteConfig.name}</p>
-        <p class="flex gap-5">
-          <a class="hover:text-ink" href="/privacy/">Privacy</a>
-          <a class="hover:text-ink" href="/terms/">Terms</a>
-        </p>
+    <footer class="border-line bg-ink border-t">
+      <div class="max-w-site mx-auto px-6 py-12">
+        <div class="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
+          <div>
+            <img
+              src="/images/ws42-logo-purple.svg"
+              alt="Workshop 42"
+              class="h-10 w-auto"
+              width="1432"
+              height="360"
+            >
+            <p class="mt-4 max-w-sm text-sm leading-relaxed opacity-70" style="color: #f5f5f0;">
+              A local business site started from the WS42 factory.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wider" style="color: #f5f5f0;">
+              Company
+            </h3>
+            <ul class="mt-4 space-y-3">
+              <li>
+                <a
+                  href="/"
+                  class="text-sm opacity-70 transition hover:opacity-100"
+                  style="color: #f5f5f0;"
+                >
+                  Home
+                </a>
+              </li>
+              {cmsPages.map((page) => (
+                <li>
+                  <a
+                    href={`/${page.id}/`}
+                    class="text-sm opacity-70 transition hover:opacity-100"
+                    style="color: #f5f5f0;"
+                  >
+                    {page.data.title}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a
+                  href="/#contact"
+                  class="text-sm opacity-70 transition hover:opacity-100"
+                  style="color: #f5f5f0;"
+                >
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wider" style="color: #f5f5f0;">
+              Legal
+            </h3>
+            <ul class="mt-4 space-y-3">
+              <li>
+                <a
+                  href="/privacy/"
+                  class="text-sm opacity-70 transition hover:opacity-100"
+                  style="color: #f5f5f0;"
+                >
+                  Privacy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terms/"
+                  class="text-sm opacity-70 transition hover:opacity-100"
+                  style="color: #f5f5f0;"
+                >
+                  Terms
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-line mt-10 border-t border-white/10 pt-8">
+          <p class="text-center text-sm opacity-60" style="color: #f5f5f0;">
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   </body>

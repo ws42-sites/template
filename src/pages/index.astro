@@ -5,25 +5,170 @@ import { siteConfig } from "../site.config";
 ---
 
 <Base title={siteConfig.name} description={siteConfig.tagline}>
-  <section class="max-w-site mx-auto px-6 py-16 sm:py-24">
-    <p class="text-brand text-sm font-medium tracking-[0.16em] uppercase">WS42</p>
-    <h1 class="font-display mt-3 max-w-3xl text-4xl leading-tight tracking-tight sm:text-5xl">
-      {siteConfig.name}
-    </h1>
-    <p class="text-muted mt-5 max-w-2xl text-lg">{siteConfig.tagline}</p>
+  <section class="bg-brand relative overflow-hidden py-20 sm:py-32">
+    <div class="absolute inset-0 opacity-20">
+      <img
+        src="/images/hero-pattern.svg"
+        alt=""
+        class="h-full w-full object-cover"
+        width="800"
+        height="600"
+        aria-hidden="true"
+      >
+    </div>
+    <div class="max-w-site relative mx-auto px-6">
+      <p class="text-brand-ink text-sm font-medium uppercase tracking-[0.16em] opacity-90">WS42</p>
+      <h1
+        class="text-brand-ink font-display mt-4 max-w-3xl text-5xl leading-tight tracking-tight sm:text-6xl"
+      >
+        {siteConfig.name}
+      </h1>
+      <p class="text-brand-ink mt-6 max-w-2xl text-xl opacity-95">{siteConfig.tagline}</p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href="/#contact"
+          class="rounded-button bg-brand-ink text-brand inline-flex items-center px-8 py-3 text-base font-semibold shadow-lg transition hover:scale-105 hover:shadow-xl"
+        >
+          Get in touch
+        </a>
+        <a
+          href="/about/"
+          class="rounded-button border-brand-ink text-brand-ink inline-flex items-center border-2 px-8 py-3 text-base font-semibold transition hover:bg-brand-ink/10"
+          aria-label={`Learn more about ${siteConfig.name}`}
+        >
+          Learn more
+        </a>
+      </div>
+    </div>
   </section>
-  <section class="border-line border-t bg-white" id="contact">
-    <div class="max-w-site mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[1fr_1.2fr]">
+
+  <section class="max-w-site mx-auto px-6 py-20 sm:py-28">
+    <div class="grid gap-8 md:grid-cols-3">
+      <div class="rounded-card border-line group bg-white p-8 shadow-sm transition hover:shadow-lg">
+        <div class="mb-6 flex h-24 w-24 items-center justify-center">
+          <img
+            src="/images/feature-speed.svg"
+            alt=""
+            width="120"
+            height="120"
+            class="transition group-hover:scale-110"
+            aria-hidden="true"
+          >
+        </div>
+        <h3 class="font-display text-2xl tracking-tight">Fast delivery</h3>
+        <p class="text-muted mt-3">A local business site started from the WS42 factory.</p>
+      </div>
+      <div class="rounded-card border-line group bg-white p-8 shadow-sm transition hover:shadow-lg">
+        <div class="mb-6 flex h-24 w-24 items-center justify-center">
+          <img
+            src="/images/feature-reliable.svg"
+            alt=""
+            width="120"
+            height="120"
+            class="transition group-hover:scale-110"
+            aria-hidden="true"
+          >
+        </div>
+        <h3 class="font-display text-2xl tracking-tight">Reliable service</h3>
+        <p class="text-muted mt-3">A local business site started from the WS42 factory.</p>
+      </div>
+      <div class="rounded-card border-line group bg-white p-8 shadow-sm transition hover:shadow-lg">
+        <div class="mb-6 flex h-24 w-24 items-center justify-center">
+          <img
+            src="/images/feature-support.svg"
+            alt=""
+            width="120"
+            height="120"
+            class="transition group-hover:scale-110"
+            aria-hidden="true"
+          >
+        </div>
+        <h3 class="font-display text-2xl tracking-tight">Expert support</h3>
+        <p class="text-muted mt-3">A local business site started from the WS42 factory.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-line border-y bg-white py-20 sm:py-28">
+    <div class="max-w-site mx-auto px-6">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div>
+          <img
+            src="/images/workspace.jpg"
+            alt="Modern workspace with laptops and natural lighting"
+            width="800"
+            height="534"
+            class="rounded-card w-full shadow-xl"
+            loading="lazy"
+          >
+        </div>
+        <div>
+          <h2 class="font-display text-4xl tracking-tight">
+            A local business site started from the WS42 factory.
+          </h2>
+          <p class="text-muted mt-6 text-lg">
+            A local business site started from the WS42 factory.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-site mx-auto px-6 py-20 sm:py-28">
+    <div class="grid items-center gap-12 lg:grid-cols-2">
+      <div class="order-2 lg:order-1">
+        <h2 class="font-display text-4xl tracking-tight">
+          A local business site started from the WS42 factory.
+        </h2>
+        <p class="text-muted mt-6 text-lg">A local business site started from the WS42 factory.</p>
+      </div>
+      <div class="order-1 lg:order-2">
+        <img
+          src="/images/team.jpg"
+          alt="Team collaborating on a project together"
+          width="800"
+          height="534"
+          class="rounded-card w-full shadow-xl"
+          loading="lazy"
+        >
+      </div>
+    </div>
+  </section>
+
+  <section class="border-line relative border-t bg-white" id="contact">
+    <div class="absolute right-0 top-0 hidden h-full w-1/3 opacity-30 lg:block">
+      <img
+        src="/images/contact-illustration.svg"
+        alt=""
+        class="h-full w-full object-contain"
+        width="400"
+        height="400"
+        aria-hidden="true"
+      >
+    </div>
+    <div
+      class="max-w-site relative mx-auto grid gap-10 px-6 py-20 sm:py-28 lg:grid-cols-[1fr_1.2fr]"
+    >
       <div>
-        <h2 class="font-display text-3xl tracking-tight">Get in touch</h2>
-        <p class="text-muted mt-3 max-w-md">
+        <h2 class="font-display text-4xl tracking-tight">Get in touch</h2>
+        <p class="text-muted mt-4 max-w-md text-lg">
           Send a message to {siteConfig.name}. We read every note at
           <a
-            class="text-ink decoration-line underline underline-offset-4"
+            class="text-brand decoration-line font-medium underline underline-offset-4 transition hover:text-brand/80"
             href={`mailto:${siteConfig.contactEmail}`}
             >{siteConfig.contactEmail}</a
           >.
         </p>
+        <div class="mt-8">
+          <img
+            src="/images/meeting.jpg"
+            alt="Business meeting with collaborative discussion"
+            width="800"
+            height="533"
+            class="rounded-card w-full max-w-md shadow-lg"
+            loading="lazy"
+          >
+        </div>
       </div>
       <ContactForm />
     </div>
