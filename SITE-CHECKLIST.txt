@@ -1,0 +1,144 @@
+WS42 SITE TEMPLATE CHECKLIST
+============================
+
+Every site cloned from this template must be checked against this list before launch.
+
+IMPORTANT: All digital assets (logos, images, favicon, OG image) and company names,
+contact details, and copy in this template are placeholders. The WS42 logo currently
+in the header is also a placeholder for client sites and must be replaced.
+
+
+SITE CONFIGURATION
+------------------
+
+[ ] src/site.config.ts values updated
+    - name, legalName, tagline
+    - contactEmail, mailingAddress, jurisdiction, privacyLaw
+    - siteUrl matches production domain
+    Verify: grep "Example Business\|example.com\|{{" src/site.config.ts should find nothing
+
+[ ] Privacy and terms pages completed
+    - All {{placeholders}} filled in src/pages/privacy.astro
+    - All {{placeholders}} filled in src/pages/terms.astro
+    Verify: grep "{{" src/pages/privacy.astro src/pages/terms.astro should find nothing
+
+
+BRANDING & ASSETS
+-----------------
+
+[ ] Logo replaced in header
+    - public/images/ws42-logo-purple.svg replaced with client logo
+    - public/images/uploads/ws42-logo-purple.svg replaced (Decap CMS media library)
+    - Alt text in src/layouts/Base.astro updated (line ~43: alt="Workshop 42")
+    Verify: Check that header logo displays correctly and alt text describes the client
+
+[ ] Favicon replaced
+    - public/favicon.svg replaced with client favicon
+    Verify: Visit site and check browser tab icon
+
+[ ] Open Graph and Twitter card image
+    - Add og:image meta tag to src/layouts/Base.astro <head>
+    - Add twitter:card, twitter:image meta tags
+    - Image should be 1200x630px and placed in public/images/
+    Verify: Test with https://www.opengraph.xyz/ or Twitter Card Validator
+
+
+FORMS & INTEGRATIONS
+--------------------
+
+[ ] Formspree contact form configured
+    - PUBLIC_FORMSPREE_ID set in .env (production) and Cloudflare Pages environment
+    - Formspree: Restrict to Domain enabled
+    - Formspree: CAPTCHA enabled (reCAPTCHA or Turnstile)
+    Verify: Submit test form and confirm email arrives; check spam protection works
+
+[ ] Decap CMS OAuth configured
+    - GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET set in Cloudflare Pages environment
+    - public/admin/config.yml: backend.repo set to ws42-sites/<client-repo>
+    - public/admin/config.yml: backend.base_url set to production domain
+    Verify: Log into /admin with GitHub and create/edit a test page
+
+
+ANALYTICS & MONITORING
+----------------------
+
+[ ] Analytics provider configured (choose one)
+    - PUBLIC_ANALYTICS_PROVIDER set to "plausible", "fathom", or empty
+    - For Plausible: PUBLIC_ANALYTICS_DOMAIN set in environment
+    - For Fathom: PUBLIC_FATHOM_SITE_ID set in environment
+    - OR Cloudflare Web Analytics enabled via Cloudflare dashboard (Pages > Settings > Analytics)
+    Verify: Check src/components/Analytics.astro renders correct script; confirm events in analytics dashboard
+
+[ ] Sentry error monitoring configured
+    - PUBLIC_SENTRY_DSN set in Production and Preview environments
+    - SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT set for source map upload
+    Verify: Trigger test error and confirm it appears in Sentry dashboard
+
+
+SEO & DISCOVERABILITY
+---------------------
+
+[ ] llms.txt present at root
+    - /llms.txt or public/llms.txt exists with site purpose, key pages, and contact
+    Verify: curl https://example.com/llms.txt returns valid content
+
+[ ] robots.txt configured
+    - /robots.txt or public/robots.txt allows search engines
+    - Points to sitemap location
+    Verify: curl https://example.com/robots.txt returns valid robots directives
+
+[ ] Sitemap generated
+    - Sitemap available at /sitemap.xml or /sitemap-index.xml
+    - All public pages included
+    Verify: curl https://example.com/sitemap.xml returns valid XML sitemap
+
+[ ] LocalBusiness structured data (JSON-LD)
+    - <script type="application/ld+json"> in src/layouts/Base.astro
+    - Includes @type: LocalBusiness, name, address, telephone, url, openingHours
+    Verify: Test with https://search.google.com/test/rich-results
+
+[ ] Canonical link tag
+    - <link rel="canonical"> in src/layouts/Base.astro <head>
+    - Points to current page's canonical URL
+    Verify: View source and confirm canonical URL matches current page
+
+
+ERROR HANDLING
+--------------
+
+[ ] 404 page configured properly
+    - Missing paths return HTTP 404 status, not 200 with home page content
+    - Custom 404 page exists (e.g., src/pages/404.astro)
+    - Cloudflare Pages configured to serve 404 page
+    Verify: curl -I https://example.com/nonexistent-page should return "404 Not Found"
+
+
+OPTIONAL: EMERGING STANDARDS
+----------------------------
+
+[ ] WebMCP integration (optional, only if adopted)
+    - WebMCP metadata added if the site participates in MCP discovery
+    Verify: N/A unless explicitly implementing WebMCP
+
+
+FINAL CHECKS
+------------
+
+[ ] All npm scripts pass
+    - npm run check:arch
+    - npm run lint
+    - npm run check
+    - npm run build
+
+[ ] Deploy preview reviewed
+    - Visual regression check
+    - All forms work
+    - All links work
+    - Analytics fires
+    - Mobile responsive
+    - Performance acceptable (Lighthouse score)
+
+[ ] DNS and SSL
+    - Domain points to Cloudflare Pages
+    - SSL certificate active
+    - www redirects to apex (or vice versa, per client preference)
