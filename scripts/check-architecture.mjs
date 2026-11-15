@@ -25,10 +25,47 @@ for (const dir of ["src/pages", "src/components", "src/layouts"]) {
 
 requireFile("public/admin/config.yml", "Decap CMS config");
 requireFile("biome.json", "Biome lint and format config");
+requireFile("src/content/settings/site.yml", "Site settings (single source of truth for identity)");
 
 if (existsSync(join(root, "netlify.toml"))) {
   errors.push("Found netlify.toml, but hosting is on Cloudflare Pages. Remove it.");
 }
+
+const checkForHardcodedIdentity = () => {
+  const filesToCheck = ["src/site.config.ts", "src/layouts/Base.astro"];
+  const _forbiddenPatterns = [
+    {
+      pattern: /siteConfig\s*=\s*{[^}]*name:\s*["'][^"']+["']/s,
+      message:
+        "site.config.ts should not have hardcoded name values; they should come from site.yml",
+    },
+    {
+      pattern: /siteConfig\s*=\s*{[^}]*contactEmail:\s*["'][^"']+["']/s,
+      message:
+        "site.config.ts should not have hardcoded contactEmail values outside fallbacks; they should come from site.yml",
+    },
+  ];
+
+  for (const file of filesToCheck) {
+    if (!isFile(file)) continue;
+    const content = readFileSync(join(root, file), "utf8");
+
+    if (file === "src/site.config.ts") {
+      if (content.includes("export const siteConfig = {")) {
+        const hasGetSiteConfig = content.includes("export async function getSiteConfig()");
+        const hasImportGetEntry = content.includes('import { getEntry } from "astro:content"');
+
+        if (!hasGetSiteConfig || !hasImportGetEntry) {
+          errors.push(
+            "src/site.config.ts must import getEntry and export getSiteConfig() to read from site.yml",
+          );
+        }
+      }
+    }
+  }
+};
+
+checkForHardcodedIdentity();
 
 if (isFile("package.json")) {
   const scripts = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).scripts ?? {};
@@ -48,8 +85,10 @@ const walk = (dir) => {
     if (entry.isDirectory()) walk(full);
     else if (markdown.test(entry.name)) {
       const rel = relative(root, full);
-      if (rel !== "README.md")
-        errors.push(`Markdown file not allowed: ${rel} (only the root README.md is permitted)`);
+      if (rel !== "README.md" && !rel.startsWith("docs/"))
+        errors.push(
+          `Markdown file not allowed: ${rel} (only README.md and docs/*.md are permitted)`,
+        );
     }
   }
 };

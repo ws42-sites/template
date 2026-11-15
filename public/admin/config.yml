@@ -8,6 +8,72 @@ local_backend: true
 media_folder: public/images/uploads
 public_folder: /images/uploads
 collections:
+  - name: settings
+    label: Site settings
+    files:
+      - label: Site
+        name: site
+        file: src/content/settings/site.yml
+        fields:
+          - label: Business name
+            name: name
+            widget: string
+            hint: The name of your business as it appears on the site
+          - label: Legal name
+            name: legalName
+            widget: string
+            hint: The full legal name of your business
+          - label: Tagline
+            name: tagline
+            widget: string
+            hint: A short description of your business
+          - label: Contact email
+            name: contactEmail
+            widget: string
+            pattern:
+              ['^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', "Must be a valid email address"]
+            hint: The email address where customers can reach you
+          - label: Phone number
+            name: phone
+            widget: string
+            required: false
+            hint: Your business phone number (optional)
+          - label: Mailing address
+            name: mailingAddress
+            widget: text
+            hint: Your business mailing address
+          - label: Jurisdiction
+            name: jurisdiction
+            widget: string
+            hint: The jurisdiction where your business operates (e.g., British Columbia, Canada)
+          - label: Privacy law
+            name: privacyLaw
+            widget: string
+            hint: The privacy law that applies to your business
+          - label: Site URL
+            name: siteUrl
+            widget: string
+            pattern: ['^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', "Must be a valid URL"]
+            hint: The full URL of your website (e.g., https://yourbusiness.com)
+          - label: Brand colors
+            name: colors
+            widget: object
+            fields:
+              - label: Brand color
+                name: brand
+                widget: string
+                pattern: ["^#[0-9A-Fa-f]{6}$", "Must be a 6-digit hex color (e.g., #8147ff)"]
+                hint: Your primary brand color in hex format
+              - label: Accent color
+                name: accent
+                widget: string
+                pattern: ["^#[0-9A-Fa-f]{6}$", "Must be a 6-digit hex color (e.g., #d9822b)"]
+                hint: Your accent color in hex format
+              - label: Background color
+                name: background
+                widget: string
+                pattern: ["^#[0-9A-Fa-f]{6}$", "Must be a 6-digit hex color (e.g., #f5f5f0)"]
+                hint: Your background color in hex format
   - name: pages
     label: Pages
     folder: src/content/pages

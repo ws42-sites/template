@@ -1,0 +1,13 @@
+name: "Example Business"
+legalName: "{{legal name}}"
+tagline: "A local business site started from the WS42 factory."
+contactEmail: "hello@example.com"
+phone: ""
+mailingAddress: "{{mailing address}}"
+jurisdiction: "British Columbia, Canada"
+privacyLaw: "the Personal Information Protection and Electronic Documents Act (PIPEDA)"
+siteUrl: "https://example.com"
+colors:
+  brand: "#8147ff"
+  accent: "#d9822b"
+  background: "#f5f5f0"

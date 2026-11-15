@@ -13,7 +13,9 @@
     "fix": "biome check --write .",
     "check": "astro check",
     "cms": "npx decap-server",
-    "check:arch": "node scripts/check-architecture.mjs"
+    "check:arch": "node scripts/check-architecture.mjs",
+    "seed": "node scripts/seed-from-onboarding.mjs",
+    "test:seed": "node scripts/seed-from-onboarding.test.mjs"
   },
   "dependencies": {
     "@sentry/astro": "^11.12.0",
@@ -28,6 +30,7 @@
     "@biomejs/biome": "2.6.7",
     "@types/sanitize-html": "^2.16.2",
     "decap-server": "^3.11.6",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "yaml": "^2.7.0"
   }
 }

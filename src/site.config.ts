@@ -1,10 +1,47 @@
+import { getEntry } from "astro:content";
+
 export type AnalyticsProvider = "plausible" | "fathom" | "none";
+
+let cachedSiteSettings: Awaited<ReturnType<typeof getEntry<"settings", "site">>> | null = null;
+
+async function getSiteSettings() {
+  if (!cachedSiteSettings) {
+    cachedSiteSettings = await getEntry("settings", "site");
+    if (!cachedSiteSettings) {
+      throw new Error("Site settings not found in src/content/settings/site.yml");
+    }
+  }
+  return cachedSiteSettings;
+}
+
+export async function getSiteConfig() {
+  const settings = await getSiteSettings();
+  return {
+    name: settings.data.name,
+    legalName: settings.data.legalName,
+    tagline: settings.data.tagline,
+    contactEmail: settings.data.contactEmail,
+    phone: settings.data.phone,
+    mailingAddress: settings.data.mailingAddress,
+    jurisdiction: settings.data.jurisdiction,
+    privacyLaw: settings.data.privacyLaw,
+    siteUrl: settings.data.siteUrl,
+    colors: settings.data.colors,
+    analytics: {
+      provider: "none" as AnalyticsProvider,
+      domain: "",
+      siteId: "",
+    },
+    formspreeFormId: "",
+  };
+}
 
 export const siteConfig = {
   name: "Example Business",
   legalName: "{{legal name}}",
   tagline: "A local business site started from the WS42 factory.",
   contactEmail: "hello@example.com",
+  phone: "",
   mailingAddress: "{{mailing address}}",
   jurisdiction: "British Columbia, Canada",
   privacyLaw: "the Personal Information Protection and Electronic Documents Act (PIPEDA)",
