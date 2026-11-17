@@ -15,6 +15,7 @@ SITE CONFIGURATION
     - name, legalName, tagline
     - contactEmail, mailingAddress, jurisdiction, privacyLaw
     - siteUrl matches production domain
+    - support.url {{slug}} set to client slug (or support.enabled set to false)
     Verify: grep "Example Business\|example.com\|{{" src/site.config.ts should find nothing
 
 [ ] Privacy and terms pages completed

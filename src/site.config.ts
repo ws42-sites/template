@@ -15,6 +15,10 @@ export const siteConfig = {
     siteId: "",
   },
   formspreeFormId: "",
+  support: {
+    url: "https://ws42-ops.pages.dev/support?client={{slug}}",
+    enabled: true,
+  },
 };
 
 type PublicEnvKey =
@@ -69,4 +73,14 @@ export function getFormspreeEndpoint(): string {
 
 export function isSentryEnabled(): boolean {
   return readPublicEnv("PUBLIC_SENTRY_DSN").length > 0;
+}
+
+export function getSupportUrl(
+  support: { url: string; enabled: boolean } = siteConfig.support,
+): string {
+  const url = support.url.trim();
+  if (!support.enabled || url.includes("{{") || !/^https:\/\/[^\s<>"'`]+$/.test(url)) {
+    return "";
+  }
+  return url;
 }
