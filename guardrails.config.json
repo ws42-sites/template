@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/@ws42/guardrails/schema/guardrails.schema.json",
+  "version": 1,
+  "docs": {
+    "allow": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "GEMINI.md",
+      "README.md",
+      "ARCHITECTURE.md",
+      "TESTING.md",
+      "RUNBOOK.md"
+    ]
+  },
+  "runbook": {
+    "enabled": true,
+    "na": {
+      "deploy": "Cloudflare Pages Git integration (project ws42-template) builds and deploys every push to main; there is no manual deploy command.",
+      "deploy:preview": "Cloudflare Pages Git integration builds a preview deployment for every pushed branch and PR."
+    }
+  },
+  "ci": {
+    "enabled": true,
+    "na": {
+      "nightly": "No test suite yet (CI is lint, astro check and build); add test:full and a nightly run with the first tests.",
+      "preDeploy": "Cloudflare Pages Git integration deploys on push; the PR CI (lint, check, build) is the only pre-deploy gate."
+    }
+  },
+  "testSuite": {
+    "enabled": true
+  }
+}

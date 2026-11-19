@@ -41,6 +41,16 @@ if (isFile("package.json")) {
 
 const skip = new Set([".git", "node_modules", "dist", ".astro", ".wrangler"]);
 const markdown = /\.(md|mdx|markdown)$/i;
+// Same top-level allowlist as guardrails DOC-1.
+const allowedMarkdown = new Set([
+  "AGENTS.md",
+  "CLAUDE.md",
+  "GEMINI.md",
+  "README.md",
+  "ARCHITECTURE.md",
+  "TESTING.md",
+  "RUNBOOK.md",
+]);
 const walk = (dir) => {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     if (skip.has(entry.name)) continue;
@@ -48,8 +58,10 @@ const walk = (dir) => {
     if (entry.isDirectory()) walk(full);
     else if (markdown.test(entry.name)) {
       const rel = relative(root, full);
-      if (rel !== "README.md")
-        errors.push(`Markdown file not allowed: ${rel} (only the root README.md is permitted)`);
+      if (!allowedMarkdown.has(rel))
+        errors.push(
+          `Markdown file not allowed: ${rel} (only top-level ${[...allowedMarkdown].join(", ")})`,
+        );
     }
   }
 };
