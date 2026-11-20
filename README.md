@@ -37,6 +37,17 @@ Starter for WS42 client websites. Click **Use this template** to create a client
 | `PUBLIC_SENTRY_DSN` | Sentry DSN; Sentry is off when empty |
 | `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` | Source map upload |
 | `PUBLIC_FORMSPREE_ID` | Formspree form ID |
+| `PUBLIC_AI_CRAWLERS` | `allow` (default) or `block-training`; overrides `siteConfig.aiCrawlers` in robots.txt |
+| `PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN` | Cloudflare Web Analytics site token for the production host. Set by the ops factory on the Pages **production** env only (with `PUBLIC_ANALYTICS_PROVIDER=cloudflare`); never on previews |
+| `CF_PAGES_BRANCH` | Set by Cloudflare Pages; any branch other than `main` builds a disallow-all robots.txt |
+
+### Crawlers and AI discovery
+
+- `robots.txt` allows `/`, disallows `/admin` and `/api`, and links the sitemap. `aiCrawlers: "block-training"` adds `Disallow: /` for GPTBot, ClaudeBot, PerplexityBot and Google-Extended (Googlebot stays allowed).
+- `functions/_middleware.js` treats `*.pages.dev`, localhost and any host other than `PUBLIC_SITE_URL` as preview: every response gets `X-Robots-Tag: noindex` and `/robots.txt` disallows everything.
+- `llms.txt` is a business card (type, area served, services, hours, phone, email, address, website) plus the page index; `llms-full.txt` adds a short summary per page. Fill `siteConfig.business`; blank or `{{placeholder}}` values are left out.
+- A CMS page can set `updated: YYYY-MM-DD` to get `<lastmod>` in `sitemap.xml`.
+- `npm test` runs the crawler tests (`node --test`).
 
 ## Going live on Netlify
 
