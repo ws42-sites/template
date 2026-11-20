@@ -8,6 +8,8 @@ const pages = defineCollection({
     title: z.string().min(1),
     hero: z.string().optional(),
     body: z.string(),
+    // Optional last-updated date; becomes <lastmod> in sitemap.xml when present.
+    updated: z.coerce.date().optional(),
   }),
 });
 

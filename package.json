@@ -13,7 +13,8 @@
     "fix": "biome check --write .",
     "check": "astro check",
     "cms": "npx decap-server",
-    "check:arch": "node scripts/check-architecture.mjs"
+    "check:arch": "node scripts/check-architecture.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@sentry/astro": "^11.12.0",

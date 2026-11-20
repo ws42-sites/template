@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_FATHOM_SITE_ID?: string;
   readonly PUBLIC_SENTRY_DSN?: string;
   readonly PUBLIC_FORMSPREE_ID?: string;
+  readonly PUBLIC_AI_CRAWLERS?: string;
 }
 
 interface ImportMeta {

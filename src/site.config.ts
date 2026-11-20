@@ -1,3 +1,5 @@
+import type { AiCrawlers } from "./lib/robots";
+
 export type AnalyticsProvider = "plausible" | "fathom" | "none";
 
 export const siteConfig = {
@@ -19,6 +21,18 @@ export const siteConfig = {
     url: "https://ws42-ops.pages.dev/support?client={{slug}}",
     enabled: true,
   },
+  // AI crawler policy for robots.txt: "allow" (default) or "block-training" (GPTBot, ClaudeBot,
+  // PerplexityBot, Google-Extended). PUBLIC_AI_CRAWLERS overrides it per deployment.
+  aiCrawlers: "allow" as AiCrawlers,
+  // Business card for llms.txt, filled by the factory from onboarding. Blank or {{placeholder}}
+  // values are left out of the published files.
+  business: {
+    type: "",
+    phone: "",
+    areaServed: [] as string[],
+    services: [] as string[],
+    hours: [] as string[],
+  },
 };
 
 type PublicEnvKey =
@@ -27,7 +41,8 @@ type PublicEnvKey =
   | "PUBLIC_ANALYTICS_DOMAIN"
   | "PUBLIC_FATHOM_SITE_ID"
   | "PUBLIC_FORMSPREE_ID"
-  | "PUBLIC_SENTRY_DSN";
+  | "PUBLIC_SENTRY_DSN"
+  | "PUBLIC_AI_CRAWLERS";
 
 function readPublicEnv(name: PublicEnvKey): string {
   const value = import.meta.env[name];
