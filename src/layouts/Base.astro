@@ -1,46 +1,34 @@
 ---
 import { getCollection } from "astro:content";
 import Analytics from "../components/Analytics.astro";
+import WebMcp from "../components/WebMcp.astro";
 import { isReservedPageSlug } from "../lib/page-slugs";
-import { getSiteUrl, getSupportUrl, siteConfig } from "../site.config";
+import {
+  buildClientJsonLd,
+  resolveClientOgImage,
+  resolveSafeSiteUrl,
+  serializeSafeJsonForScript,
+} from "../lib/seo-head";
+import { getClientOgImage, getSiteUrl, getSupportUrl, siteConfig } from "../site.config";
 import "../styles/global.css";
 
 type Props = {
   title: string;
-  description?: string;
+  description?: string | undefined;
+  ogImage?: string | undefined;
 };
 
-const { title, description = siteConfig.tagline } = Astro.props;
+const { title, description = siteConfig.tagline, ogImage: pageOgImage } = Astro.props;
 const pageTitle = title === siteConfig.name ? title : `${title} · ${siteConfig.name}`;
 const cmsPages = (await getCollection("pages"))
   .filter((page) => !isReservedPageSlug(page.id))
   .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
-const siteUrl = getSiteUrl();
+const siteUrl = resolveSafeSiteUrl(getSiteUrl());
 const supportUrl = getSupportUrl();
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-const ogImage = `${siteUrl}/images/ws42-logo-purple.svg`;
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type":
-    siteConfig.legalName && siteConfig.legalName !== "{{legal name}}"
-      ? "LocalBusiness"
-      : "Organization",
-  name: siteConfig.name,
-  url: siteUrl,
-  ...(siteConfig.legalName &&
-    siteConfig.legalName !== "{{legal name}}" && {
-      legalName: siteConfig.legalName,
-    }),
-  ...(siteConfig.contactEmail && {
-    email: siteConfig.contactEmail,
-  }),
-  ...(siteConfig.mailingAddress &&
-    siteConfig.mailingAddress !== "{{mailing address}}" && {
-      address: siteConfig.mailingAddress,
-    }),
-};
+const canonicalUrl = new URL(Astro.url.pathname, `${siteUrl}/`).href;
+const ogImage = resolveClientOgImage(siteUrl, pageOgImage, getClientOgImage());
+const jsonLd = buildClientJsonLd(siteConfig, { siteUrl, ogImage, description });
 ---
 
 <!doctype html>
@@ -62,8 +50,9 @@ const jsonLd = {
     <meta name="twitter:title" content={pageTitle}>
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={ogImage}>
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script type="application/ld+json" set:html={serializeSafeJsonForScript(jsonLd)} />
     <Analytics />
+    <WebMcp />
   </head>
   <body class="min-h-screen">
     <a

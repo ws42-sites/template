@@ -1,0 +1,18 @@
+---
+import { buildClientWebMcpData, serializeSafeJsonForScript } from "../lib/seo-head";
+import { getSiteUrl, siteConfig } from "../site.config";
+
+const webMcpData = buildClientWebMcpData(siteConfig, getSiteUrl());
+---
+
+<script
+  is:inline
+  type="application/json"
+  data-ws42-webmcp-config
+  set:html={serializeSafeJsonForScript(webMcpData)}
+/>
+<script>
+import { initClientWebMcpFromDom } from "../lib/webmcp";
+
+initClientWebMcpFromDom(document);
+</script>
