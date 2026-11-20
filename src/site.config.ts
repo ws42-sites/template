@@ -103,9 +103,8 @@ const NUMERIC_LABEL_PATTERN = /^\d+$/;
 function readPublicEnv(name: PublicEnvKey): string {
   const metaEnv = (import.meta as ImportMeta & { env?: Partial<Record<PublicEnvKey, unknown>> })
     .env;
-  const procEnv = (
-    globalThis as { process?: { env?: Partial<Record<PublicEnvKey, unknown>> } }
-  ).process?.env;
+  const procEnv = (globalThis as { process?: { env?: Partial<Record<PublicEnvKey, unknown>> } })
+    .process?.env;
   const value = metaEnv?.[name] ?? procEnv?.[name];
   return typeof value === "string" ? value.trim() : "";
 }

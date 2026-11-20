@@ -1,11 +1,16 @@
-// robots.txt policy for client sites. Kept free of imports so the Pages middleware tests and the
-// Astro route share one implementation.
-// TODO(seo-mid): replace with toRobotsTxt(hostContext) from src/lib/seo.ts once the shared module lands.
+// robots.txt policy for client sites. Thin wrappers around src/lib/seo.ts so Pages middleware
+// tests and the Astro route share one implementation.
+import { type HostContext, type AiCrawlers as SharedAiCrawlers, toRobotsTxt } from "./seo.ts";
 
-export type AiCrawlers = "allow" | "block-training";
+export type AiCrawlers = SharedAiCrawlers;
 
 /** AI crawlers blocked by "block-training" (same list as the shared toRobotsTxt). Googlebot is never blocked. */
-export const TRAINING_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"] as const;
+export const TRAINING_CRAWLERS = [
+  "GPTBot",
+  "ClaudeBot",
+  "PerplexityBot",
+  "Google-Extended",
+] as const;
 
 export const PREVIEW_ROBOTS = "User-agent: *\nDisallow: /\n";
 
@@ -19,16 +24,26 @@ export function isPreviewBuild(branch: string | undefined): boolean {
   return Boolean(branch && branch !== "main");
 }
 
+function hostContext(siteUrl: string, preview: boolean): HostContext {
+  let productionUrl = siteUrl;
+  let hostname = "example.com";
+  try {
+    const url = new URL(siteUrl);
+    productionUrl = url.href;
+    hostname = preview ? "preview.pages.dev" : url.hostname;
+  } catch {
+    if (preview) hostname = "preview.pages.dev";
+  }
+  return { hostname, productionUrl };
+}
+
 export function robotsTxt(opts: {
   siteUrl: string;
   preview: boolean;
   aiCrawlers: AiCrawlers;
 }): string {
-  if (opts.preview) return PREVIEW_ROBOTS;
-  const lines = ["User-agent: *", "Allow: /", "Disallow: /admin", "Disallow: /api", ""];
-  if (opts.aiCrawlers === "block-training") {
-    for (const bot of TRAINING_CRAWLERS) lines.push(`User-agent: ${bot}`, "Disallow: /", "");
-  }
-  lines.push(`Sitemap: ${opts.siteUrl.replace(/\/+$/, "")}/sitemap.xml`);
-  return `${lines.join("\n")}\n`;
+  return toRobotsTxt(hostContext(opts.siteUrl, opts.preview), {
+    site: "client",
+    aiCrawlers: opts.aiCrawlers,
+  });
 }

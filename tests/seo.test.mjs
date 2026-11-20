@@ -4,14 +4,14 @@ import { isPreviewHost, onRequest, PREVIEW_ROBOTS } from "../functions/_middlewa
 import { llmsFullTxt, llmsTxt, summarize } from "../src/lib/llms.ts";
 import { aiCrawlersFrom, isPreviewBuild, robotsTxt } from "../src/lib/robots.ts";
 
-test("production robots allows /, disallows /admin and /api, and links the sitemap", () => {
+test("SEO-02 production robots allows /, disallows /admin and /api, and links the sitemap", () => {
   assert.equal(
     robotsTxt({ siteUrl: "https://harbourbakery.ca/", preview: false, aiCrawlers: "allow" }),
     "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api\n\nSitemap: https://harbourbakery.ca/sitemap.xml\n",
   );
 });
 
-test("block-training disallows the four AI crawlers; preview builds disallow everything", () => {
+test("SEO-02 block-training disallows the four AI crawlers; preview builds disallow everything", () => {
   const body = robotsTxt({ siteUrl: "https://a.ca", preview: false, aiCrawlers: "block-training" });
   for (const bot of ["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"]) {
     assert.ok(body.includes(`User-agent: ${bot}\nDisallow: /\n`), bot);
@@ -30,7 +30,7 @@ test("block-training disallows the four AI crawlers; preview builds disallow eve
   assert.equal(aiCrawlersFrom(undefined, "nonsense"), "allow");
 });
 
-test("preview hosts are pages.dev, localhost or anything but the configured site", () => {
+test("SEO-05 preview hosts are pages.dev, localhost or anything but the configured site", () => {
   const env = { PUBLIC_SITE_URL: "https://harbourbakery.ca" };
   assert.equal(isPreviewHost("harbour-bakery.pages.dev", {}), true);
   assert.equal(isPreviewHost("abc.harbour-bakery.pages.dev", env), true);
@@ -45,7 +45,7 @@ const html = () =>
 const run = (url, next = async () => html()) =>
   onRequest({ request: new Request(url), env: { PUBLIC_SITE_URL: "https://a.ca" }, next });
 
-test("middleware noindexes preview hosts, serves disallow-all robots and leaves production alone", async () => {
+test("SEO-05 middleware noindexes preview hosts, serves disallow-all robots and leaves production alone", async () => {
   const preview = await run("https://x.pages.dev/about/");
   assert.equal(preview.headers.get("X-Robots-Tag"), "noindex");
   assert.equal(await preview.text(), "<p>hi</p>");
@@ -79,22 +79,23 @@ const pages = [
 ];
 const legal = [{ title: "Privacy Policy", url: "/privacy/" }];
 
-test("llms files are a business card plus page index and never leak placeholders", () => {
+test("SEO-04 llms files are a business card plus page index and never leak placeholders", () => {
   const short = llmsTxt(card, pages, legal);
-  assert.ok(short.startsWith("# Harbour Bakery\n\n> Fresh bread daily\n"));
+  assert.ok(short.startsWith("# Harbour Bakery\n\nFresh bread daily\n"));
   for (const line of [
-    "- Type: Bakery",
-    "- Area served: Halifax",
-    "- Services: Bread, Cakes",
-    "- Hours: Mon-Fri 7am-6pm",
-    "- Phone: +1 902 555 0100",
-    "- Website: https://harbourbakery.ca/",
-    "- [About](https://harbourbakery.ca/about/)",
+    "Type: Bakery",
+    "Area served: Halifax",
+    "Services: Bread; Cakes",
+    "Hours: Mon-Fri 7am-6pm",
+    "Phone: +1 902 555 0100",
+    "Website: https://harbourbakery.ca/",
+    "- About: https://harbourbakery.ca/about/",
+    "- Privacy Policy: https://harbourbakery.ca/privacy/",
   ]) {
-    assert.ok(short.includes(`${line}\n`), line);
+    assert.ok(short.includes(line), line);
   }
   const full = llmsFullTxt(card, pages, legal);
-  assert.ok(full.includes("## About\n\nURL: https://harbourbakery.ca/about/\n\nWe bake.\n"));
+  assert.ok(full.includes("## About\n\nWe bake."));
   for (const body of [short, full]) {
     assert.ok(!body.includes("{{"));
     assert.ok(!body.includes("Address:"));
@@ -102,7 +103,7 @@ test("llms files are a business card plus page index and never leak placeholders
   }
 });
 
-test("summaries take the first prose paragraph without markdown", () => {
+test("SEO-04 summaries take the first prose paragraph without markdown", () => {
   assert.equal(summarize("## Heading\n\nWe **bake** [bread](/b).\n\nMore."), "We bake bread.");
   assert.equal(summarize("x".repeat(500), 10), `${"x".repeat(9)}…`);
 });

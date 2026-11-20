@@ -1,6 +1,6 @@
-// llms.txt / llms-full.txt for client sites: a business card for AI agents, then the page index.
-// Pure and import-free so it can be unit tested with node --test.
-// TODO(seo-mid): swap for toLlmsTxt()/toLlmsFullTxt() from src/lib/seo.ts once the shared module lands.
+// llms.txt / llms-full.txt for client sites: wrappers around src/lib/seo.ts plus a markdown summarizer
+// used when filling page summaries from CMS content.
+import { type LocalBusinessSeo, type SeoPage, toLlmsFullTxt, toLlmsTxt } from "./seo.ts";
 
 export interface BusinessCard {
   name: string;
@@ -27,45 +27,41 @@ export function clean(value: string | undefined): string | undefined {
   return v && !v.includes("{{") ? v : undefined;
 }
 
-const cleanList = (values: string[] | undefined) =>
-  (values ?? []).map(clean).filter((v): v is string => Boolean(v));
-
-export function cardLines(card: BusinessCard): string[] {
-  const rows: Array<[string, string | undefined]> = [
-    ["Type", clean(card.type)],
-    ["Area served", cleanList(card.areaServed).join(", ") || undefined],
-    ["Services", cleanList(card.services).join(", ") || undefined],
-    ["Hours", cleanList(card.hours).join("; ") || undefined],
-    ["Phone", clean(card.phone)],
-    ["Email", clean(card.email)],
-    ["Address", clean(card.address)],
-    ["Website", clean(card.url)],
-  ];
-  return rows.filter(([, v]) => v).map(([k, v]) => `- ${k}: ${v}`);
+function asBusiness(card: BusinessCard): LocalBusinessSeo {
+  const business: LocalBusinessSeo = {
+    kind: "LocalBusiness",
+    name: card.name,
+    url: card.url,
+  };
+  const tagline = clean(card.tagline);
+  const businessType = clean(card.type);
+  const telephone = clean(card.phone);
+  const email = clean(card.email);
+  if (tagline) business.tagline = tagline;
+  if (businessType) business.businessType = businessType;
+  if (card.areaServed) business.areaServed = card.areaServed;
+  if (card.services) business.services = card.services;
+  if (card.hours) business.hours = card.hours;
+  if (telephone) business.telephone = telephone;
+  if (email) business.email = email;
+  // A raw mailing-address string is never guessed into a PostalAddress.
+  return business;
 }
 
-function header(card: BusinessCard): string[] {
-  const tagline = clean(card.tagline);
-  return [`# ${clean(card.name) ?? "Business"}`, "", ...(tagline ? [`> ${tagline}`, ""] : [])];
+function asPages(pages: LlmsPage[], legal: LlmsPage[]): SeoPage[] {
+  return [...pages, ...legal].map((page) => ({
+    path: page.url,
+    title: page.title,
+    ...(page.summary ? { summary: page.summary } : {}),
+  }));
 }
 
 export function llmsTxt(card: BusinessCard, pages: LlmsPage[], legal: LlmsPage[]): string {
-  const base = card.url.replace(/\/+$/, "");
-  const link = (p: LlmsPage) => `- [${p.title}](${base}${p.url})`;
-  const out = [...header(card), "## Business", "", ...cardLines(card), "", "## Pages", ""];
-  out.push(...pages.map(link), "", "## Legal", "", ...legal.map(link), "");
-  return out.join("\n");
+  return toLlmsTxt(asBusiness(card), asPages(pages, legal));
 }
 
 export function llmsFullTxt(card: BusinessCard, pages: LlmsPage[], legal: LlmsPage[]): string {
-  const base = card.url.replace(/\/+$/, "");
-  const out = [...header(card), "## Business", "", ...cardLines(card), ""];
-  for (const page of pages) {
-    out.push(`## ${page.title}`, "", `URL: ${base}${page.url}`, "");
-    if (page.summary) out.push(page.summary, "");
-  }
-  out.push("## Legal", "", ...legal.map((p) => `- [${p.title}](${base}${p.url})`), "");
-  return out.join("\n");
+  return toLlmsFullTxt(asBusiness(card), asPages(pages, legal));
 }
 
 /** First readable paragraph of a markdown body, without markup, capped for agents. */
